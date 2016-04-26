@@ -1,6 +1,7 @@
 module TimeAxisArrays
 
 using AxisArrays
+using Iterators
 
 export RegularTimeAxisArray
 
@@ -38,6 +39,29 @@ showinnerline(colvals::AbstractVector, colwidths::Vector{Int}, center::Bool=fals
 hline(colwidths::Vector{Int}, line::AbstractString, joiner::AbstractString) =
     join(map(colwidth -> repeat(line, colwidth+2), colwidths), joiner)
 
+function paneltotext{T}(io::IO, A::RegularTimeAxisArray{T,2})
+    timestamps, colnames = A.axes[1].val, A.axes[2].val
+    n, m = length(timestamps), length(colnames)
+    tsname = "$(dimname(A.axes[1])) \\ $(dimname(A.axes[2]))"
+    tswidth = maxstrwidth(timestamps, tsname)
+    colwidths = map(colname -> maxstrwidth(A[:,colname].data, string(colname)), colnames)
+    totalcolswidth = sum(colwidths) + 3(length(colnames)-1 - 2)
+    println(io, "┏",repeat("━", tswidth + 2), "┳", hline(colwidths, "━", "┯"), "┓")
+    showline(io, tsname, tswidth, colnames, colwidths, center=true)
+    println(io, "┠",repeat("─", tswidth + 2), "╂", hline(colwidths, "─", "┼"),"┨")
+    if n < 9
+        [showline(io, timestamps[i], tswidth, A[i,:].data, colwidths) for i in eachindex(timestamps)]
+    else
+        [showline(io, timestamps[i], tswidth, A[i,:].data, colwidths) for i in 1:4]
+        showline(io, "⋮", tswidth, repmat(["⋮"], m), colwidths, center=true)
+        [showline(io, timestamps[i], tswidth, A[i,:].data, colwidths) for i in n-3:n]
+    end
+    println(io, "┗",repeat("━", tswidth + 2), "┻", hline(colwidths, "━", "┷"), "┛")
+    return timestamps
+end #paneltotext
+
+panellabeltotext(ns::Vector{Symbol}, cs::Vector{Symbol}) = join(map((n,c) -> "$n: $c", ns, cs), ", ")
+
 function textrep{T}(io::IO, A::RegularTimeAxisArray{T,1})
     timestamps = A.axes[1].val
     n = length(timestamps)
@@ -58,29 +82,24 @@ function textrep{T}(io::IO, A::RegularTimeAxisArray{T,1})
     end
     println(io, "┗",repeat("━", tswidth + 2), "┻", repeat("━", valwidth + 2),"┛")
     return timestamps
-end #textrep
+end #textrep 1D
 
 function textrep{T}(io::IO, A::RegularTimeAxisArray{T,2})
-    timestamps, colnames = A.axes[1].val, A.axes[2].val
-    n, m = length(timestamps), length(colnames)
-    tsname = "$(dimname(A.axes[1])) \\ $(dimname(A.axes[2]))"
-    tswidth = maxstrwidth(timestamps, tsname)
-    colwidths = map(colname -> maxstrwidth(A[:,colname].data, string(colname)), colnames)
-    totalcolswidth = sum(colwidths) + 3(length(colnames)-1 - 2)
-    println(io, "$(n)x$(m) RegularTimeAxisArray{$T,2,...}:")
-    println(io, "┏",repeat("━", tswidth + 2), "┳", hline(colwidths, "━", "┯"), "┓")
-    showline(io, tsname, tswidth, colnames, colwidths, center=true)
-    println(io, "┠",repeat("─", tswidth + 2), "╂", hline(colwidths, "─", "┼"),"┨")
-    if n < 9
-        [showline(io, timestamps[i], tswidth, A[i,:].data, colwidths) for i in eachindex(timestamps)]
-    else
-        [showline(io, timestamps[i], tswidth, A[i,:].data, colwidths) for i in 1:4]
-        showline(io, "⋮", tswidth, repmat(["⋮"], m), colwidths, center=true)
-        [showline(io, timestamps[i], tswidth, A[i,:].data, colwidths) for i in n-3:n]
-    end
-    println(io, "┗",repeat("━", tswidth + 2), "┻", hline(colwidths, "━", "┷"), "┛")
-    return timestamps
-end #textrep
+    println(io, "$(length(A.axes[1].val))x$(length(A.axes[2].val)) RegularTimeAxisArray{$T,2,...}:")
+    return paneltotext(io, A)
+end #textrep 2D
+
+function textrep{T,N}(io::IO, A::RegularTimeAxisArray{T,N})
+    higherdimnames = Symbol[dimname(A.axes[i]) for i in 3:N]
+    higherdimcategories = Vector{Symbol}[A.axes[i].val for i in 3:N]
+    dimsizes = join(size(A), "x")
+    println(io, "$dimsizes RegularTimeAxisArray{$T,$N,...}:")
+    for categoryset in product(higherdimcategories...)
+        println(io, "\n", panellabeltotext(higherdimnames, collect(categoryset)))
+        paneltotext(io, A[:,:,categoryset...])
+    end #for
+    return A.axes[1].val
+end #textrep 3D+
 
 function Base.writemime(io::IO, m::MIME"text/plain", A::RegularTimeAxisArray)
     timestamps = textrep(io, A)
