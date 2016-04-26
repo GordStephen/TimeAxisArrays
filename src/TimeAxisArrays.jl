@@ -1,7 +1,7 @@
 module TimeAxisArrays
 
-using AxisArrays
-using Iterators
+using Reexport, Iterators
+@reexport using AxisArrays
 
 export RegularTimeAxisArray
 
