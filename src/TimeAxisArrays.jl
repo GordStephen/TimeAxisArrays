@@ -9,8 +9,11 @@ typealias CategoricalAxis{S} Axis{S, Vector{Symbol}}
 typealias RegularTimeAxis{R<:Range} Axis{:Timestamp, R}
 typealias RegularTimeAxisArray{T,N,D,Ax<:Tuple{RegularTimeAxis,Vararg{CategoricalAxis}}} AxisArray{T,N,D,Ax}
 
-call(::Type{RegularTimeAxisArray}, data::AbstractArray, timestamps::Range, axes::Axis...) =
+call(::Type{RegularTimeAxisArray}, data::AbstractArray, timestamps::Range, axes::CategoricalAxis...) =
     AxisArray(data, Axis{:Timestamp}(timestamps), axes...)
+
+call(::Type{RegularTimeAxisArray}, data::AbstractMatrix, timestamps::Range, columns::Vector{Symbol}) =
+    RegularTimeAxisArray(data, timestamps, Axis{:Columns}(columns))
 
 maxstrwidth(x::AbstractVector, colname) = maximum(map(ts -> length(string(ts)), [x; colname]))
 

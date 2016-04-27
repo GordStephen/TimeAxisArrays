@@ -14,6 +14,8 @@ A = RegularTimeAxisArray(data, n-Hour(2):Hour(1):n+Hour(2),
                          Axis{:Columns}([:A, :B]))
 @test isa(A, RegularTimeAxisArray)
 writemime(IOBuffer(),MIME("text/plain"),A)
+A2 = RegularTimeAxisArray(data, n-Hour(2):Hour(1):n+Hour(2), [:A, :B])
+@test A == A2
 
 data = randn(49,2,3)
 A = RegularTimeAxisArray(data, n-Day(1):Hour(1):n+Day(1),
