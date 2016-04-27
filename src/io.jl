@@ -136,6 +136,22 @@ end #readdlm
 
 # Write to disk
 
-function writedlm(f, A::RegularTimeAxisArray; kwargs...)
-    #stuff
-end #readdlm
+Base.writedlm{T}(f, A::TimeAxisArray{T,1}; kwargs...) = writedlm(f, Any[timestamps(A) A.data]; kwargs...)
+
+function Base.writedlm{T,N}(f, A::TimeAxisArray{T,N}; kwargs...)
+
+    fileArray = Matrix{Any}(size(A,1)+N-1,0)
+
+    higherdimnames = Symbol[dimname(A.axes[i]) for i in 2:N]
+    higherdimcategories = Vector{Symbol}[A.axes[i].val for i in 2:N]
+
+    fileArray = [fileArray [reverse(higherdimnames); timestamps(A)]]
+
+    for categoryset in product(higherdimcategories...)
+        fileArray = [fileArray [reverse(collect(categoryset)); A[:,categoryset...].data]]
+    end #for
+
+    writedlm(f, fileArray; kwargs...)
+    return nothing
+
+end #writedlm
