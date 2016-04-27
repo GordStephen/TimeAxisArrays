@@ -96,13 +96,13 @@ end #writemime
 
 # Read from disk
 
-function readtimeaxisarray(source, timeparser::Function,
+function readtimeaxisarray(f, timeparser::Function,
                            dataparser::Function=x->stringfallback(x, NaN);
                            timecol::Bool=true, header::Bool=true, namedaxes::Bool=false, defaultval=NaN,
-                           headlines::Int=header?1:0, delim=',', kwargs...)
+                           headlines::Int=header?1:0, delim::Char=',', kwargs...)
 
     # Read in data
-    rawdata = readdlm(source, delim, header=false; kwargs...)
+    rawdata = readdlm(f, delim, header=false; kwargs...)
 
     # Process array contents
     data = map(dataparser, rawdata[1+headlines:end,(1+timecol):end])
@@ -120,7 +120,7 @@ function readtimeaxisarray(source, timeparser::Function,
         A = TimeAxisArray(data, timestamps, [defaultcolumnnames[i] for i in 1:ndatacols])
     else
         headers = map(symbolize, rawdata[1:headlines, (1+timecol):end])
-        dataaxisnames = (namedaxes && timecol) ?
+        dataaxisnames = (timecol && namedaxes) ?
             map(symbolize, rawdata[1:headlines,1]) : defaultaxisnames[2:headlines+1]
         axes = map(i -> Axis{dataaxisnames[i]}(unique(headers[i,:])), 1:headlines) |> reverse
         dims = tuple(length(timestamps), map(length, axes)...)
@@ -136,9 +136,9 @@ end #readdlm
 
 # Write to disk
 
-Base.writedlm{T}(f, A::TimeAxisArray{T,1}; kwargs...) = writedlm(f, Any[timestamps(A) A.data]; kwargs...)
+Base.writedlm{T}(f::AbstractString, A::TimeAxisArray{T,1}, delim::Char=',') = writedlm(f, Any[timestamps(A) A.data], delim)
 
-function Base.writedlm{T,N}(f, A::TimeAxisArray{T,N}; kwargs...)
+function Base.writedlm{T,N}(f::AbstractString, A::TimeAxisArray{T,N}, delim::Char=',')
 
     fileArray = Matrix{Any}(size(A,1)+N-1,0)
 
@@ -151,7 +151,6 @@ function Base.writedlm{T,N}(f, A::TimeAxisArray{T,N}; kwargs...)
         fileArray = [fileArray [reverse(collect(categoryset)); A[:,categoryset...].data]]
     end #for
 
-    writedlm(f, fileArray; kwargs...)
-    return nothing
+    writedlm(f, fileArray, delim)
 
 end #writedlm
