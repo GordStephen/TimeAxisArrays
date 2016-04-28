@@ -33,15 +33,26 @@ collapse{T,N}(A::TimeAxisArray{T,N}, tsreducer::Function, reducer::Function=tsre
 downsample{T,N}(A::TimeAxisArray{T,N}, splitter::Function, tsreducer::Function, reducer::Function=tsreducer) =
     vcat(map(a -> collapse(a, tsreducer, reducer), split(A, splitter))...)
 
-lead(A::TimeAxisArray) = nothing
+moving(A::TimeAxisArray) = nothing
 
-lag(A::TimeAxisArray) = nothing
+function lag(A::TimeAxisArray, k::Int=1)
+    n = size(A,1)
+    return TimeAxisArray(A[Axis{:Timestamp}(1:n-k)].data, timestamps(A)[1+k:n], A.axes[2:end]...)
+end #lag
 
-diff(A::TimeAxisArray) = nothing
+function lead(A::TimeAxisArray, k::Int=1)
+    n = size(A,1)
+    return TimeAxisArray(A[Axis{:Timestamp}(1+k:n)].data, timestamps(A)[1:n-k], A.axes[2:end]...)
+end #lead
+
+Base.diff(A::TimeAxisArray, k::Int=1) = if k == 1
+    n = size(A,1)
+    return TimeAxisArray(A[Axis{:Timestamp}(2:n)].data .- A[Axis{:Timestamp}(1:n-1)].data, timestamps(A)[2:n], A.axes[2:end]...)
+else
+    return diff(diff(A, k-1))
+end #if
 
 percentchange(A::TimeAxisArray) = nothing
-
-moving(A::TimeAxisArray) = nothing
 
 function dropif(selector::Function, predicate::Function, A::TimeAxisArray)
     keepers = Int[]
