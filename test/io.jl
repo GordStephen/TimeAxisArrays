@@ -14,3 +14,5 @@ writedlm(testfile, A2d1)
 
 writedlm(testfile, A4d)
 @test A4d == readtimeaxisarray(testfile, datetime(), namedaxes=true, headlines=3)
+
+rm(testfile)

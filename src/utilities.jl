@@ -19,3 +19,9 @@ stringfallback(x::AbstractString, fallback) = fallback
 
 date(format::AbstractString="yyyy-mm-dd"; locale="english") = x -> Date(x, format, locale=locale)
 datetime(format::AbstractString="yyyy-mm-ddTHH:MM:SS"; locale="english") = x -> DateTime(x, format, locale=locale)
+
+function Base.vcat(taas::TimeAxisArray...)
+    ts = vcat(map(timestamps, taas)...)
+    data = vcat(map(taa -> taa.data, taas)...)
+    return TimeAxisArray(data, ts, taas[1].axes[2:end]...)
+end #vcat

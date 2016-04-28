@@ -4,6 +4,8 @@ using Reexport, Iterators
 @reexport using AxisArrays
 
 export TimeAxisArray, RegularTimeAxisArray,
+timestamps, interval,
+collapse, downsample,
 readtimeaxisarray, date, datetime
 
 symbolize(x) = x |> string |> symbol
@@ -25,6 +27,7 @@ call(::Type{TimeAxisArray}, data::AbstractArray, timestamps::AbstractTimeVector,
 call(::Type{TimeAxisArray}, data::AbstractMatrix, timestamps::AbstractTimeVector, columns::Vector{Symbol}) =
     TimeAxisArray(data, timestamps, Axis{defaultaxisnames[2]}(columns))
 
+include("operations.jl")
 include("io.jl")
 include("utilities.jl")
 
