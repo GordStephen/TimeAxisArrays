@@ -48,14 +48,14 @@ end #paneltotext
 
 panellabeltotext(ns::Vector{Symbol}, cs::Vector{Symbol}) = join(map((n,c) -> "$n: $c", ns, cs), ", ")
 
-function textrep{T}(io::IO, A::RegularTimeAxisArray{T,1})
+function textrep{T}(io::IO, A::TimeAxisArray{T,1}, typealiasname::AbstractString)
     timestamps = A.axes[1].val
     n = length(timestamps)
     tsname = dimname(A.axes[1])
     tswidth = maxstrwidth(timestamps, tsname)
     valname = "Value"
     valwidth = maxstrwidth(A.data, valname)
-    println(io, "$n-element RegularTimeAxisArray{$T,1,...}:")
+    println(io, "$n-element $typealiasname{$T,1,...}:")
     println(io, "┏",repeat("━", tswidth + 2), "┳", repeat("━", valwidth + 2),"┓")
     showline(io, tsname, tswidth, valname, valwidth, center=true)
     println(io, "┠",repeat("─", tswidth + 2), "╂", repeat("─", valwidth + 2),"┨")
@@ -70,16 +70,16 @@ function textrep{T}(io::IO, A::RegularTimeAxisArray{T,1})
     return timestamps
 end #textrep 1D
 
-function textrep{T}(io::IO, A::RegularTimeAxisArray{T,2})
-    println(io, "$(length(A.axes[1].val))x$(length(A.axes[2].val)) RegularTimeAxisArray{$T,2,...}:")
+function textrep{T}(io::IO, A::TimeAxisArray{T,2}, typealiasname::AbstractString)
+    println(io, "$(length(A.axes[1].val))x$(length(A.axes[2].val)) $typealiasname{$T,2,...}:")
     return paneltotext(io, A)
 end #textrep 2D
 
-function textrep{T,N}(io::IO, A::RegularTimeAxisArray{T,N})
+function textrep{T,N}(io::IO, A::TimeAxisArray{T,N}, typealiasname::AbstractString)
     higherdimnames = Symbol[dimname(A.axes[i]) for i in 3:N]
     higherdimcategories = Vector{Symbol}[A.axes[i].val for i in 3:N]
     dimsizes = join(size(A), "x")
-    println(io, "$dimsizes RegularTimeAxisArray{$T,$N,...}:")
+    println(io, "$dimsizes $typealiasname{$T,$N,...}:")
     for categoryset in product(higherdimcategories...)
         println(io, "\n", panellabeltotext(higherdimnames, collect(categoryset)))
         paneltotext(io, A[:,:,categoryset...])
@@ -87,8 +87,15 @@ function textrep{T,N}(io::IO, A::RegularTimeAxisArray{T,N})
     return A.axes[1].val
 end #textrep 3D+
 
+function Base.writemime(io::IO, m::MIME"text/plain", A::TimeAxisArray)
+    timestamps = textrep(io, A, "TimeAxisArray")
+    tsstart, tsend = timestamps[1], timestamps[end]
+    print(io, "Spans $tsstart to $tsend")
+    return nothing
+end #writemime
+
 function Base.writemime(io::IO, m::MIME"text/plain", A::RegularTimeAxisArray)
-    timestamps = textrep(io, A)
+    timestamps = textrep(io, A, "RegularTimeAxisArray")
     tsstart, tsend, tsinterval = timestamps[1], timestamps[end], step(timestamps)
     print(io, "Spans $tsstart to $tsend at intervals of $tsinterval")
     return nothing

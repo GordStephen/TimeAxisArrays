@@ -5,7 +5,9 @@ using Reexport, Iterators
 
 export TimeAxisArray, RegularTimeAxisArray,
 timestamps, interval,
-collapse, downsample,
+collapse, downsample, moving,
+lead, lag, diff, percentchange,
+dropif, dropnan,
 readtimeaxisarray, date, datetime
 
 symbolize(x) = x |> string |> symbol

@@ -20,9 +20,35 @@ end #split
 # For use with do-notation
 Base.split(f::Function, A::TimeAxisArray) = Base.split(A, f)
 
+function Base.vcat(taas::TimeAxisArray...)
+    ts = vcat(map(timestamps, taas)...)
+    data = vcat(map(taa -> taa.data, taas)...)
+    return TimeAxisArray(data, ts, taas[1].axes[2:end]...)
+end #vcat
+
 # TODO: Lift basic 1D->scalar reducer (rather than hope the supplied function does the right thing)
 collapse{T,N}(A::TimeAxisArray{T,N}, tsreducer::Function, reducer::Function=tsreducer) =
     TimeAxisArray(reducer(A.data), [tsreducer(timestamps(A))], A.axes[2:end]...)
 
 downsample{T,N}(A::TimeAxisArray{T,N}, splitter::Function, tsreducer::Function, reducer::Function=tsreducer) =
     vcat(map(a -> collapse(a, tsreducer, reducer), split(A, splitter))...)
+
+lead(A::TimeAxisArray) = nothing
+
+lag(A::TimeAxisArray) = nothing
+
+diff(A::TimeAxisArray) = nothing
+
+percentchange(A::TimeAxisArray) = nothing
+
+moving(A::TimeAxisArray) = nothing
+
+function dropif(selector::Function, predicate::Function, A::TimeAxisArray)
+    keepers = Int[]
+    for i in 1:size(A,1)
+        !selector(predicate, A[Axis{:Timestamp}(i)]) && push!(keepers, i)
+    end #for
+    return A[Axis{:Timestamp}(keepers)]
+end #dropif
+
+dropnan(A::TimeAxisArray, selector::Function=all) = dropif(selector, isnan, A)
