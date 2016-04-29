@@ -52,7 +52,8 @@ else
     return diff(diff(A, k-1))
 end #if
 
-percentchange(A::TimeAxisArray) = nothing
+percentchange(A::TimeAxisArray; logresult::Bool=false) =
+    logresult ? diff(map(log,A)) : map(expm1, percentchange(A, logresult=true))
 
 function dropif(selector::Function, predicate::Function, A::TimeAxisArray)
     keepers = Int[]
