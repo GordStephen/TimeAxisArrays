@@ -26,14 +26,22 @@ function Base.vcat(taas::TimeAxisArray...)
     return TimeAxisArray(data, ts, taas[1].axes[2:end]...)
 end #vcat
 
-# TODO: Lift basic 1D->scalar reducer (rather than hope the supplied function does the right thing)
-collapse{T,N}(A::TimeAxisArray{T,N}, tsreducer::Function, reducer::Function=tsreducer) =
-    TimeAxisArray(reducer(A.data), [tsreducer(timestamps(A))], A.axes[2:end]...)
+# TODO: For collapse and moving, include option (default?) to lift basic 1D->scalar reducer
+#       (rather than hope the supplied function does the right thing and work along the first dimension)
+collapse(A::TimeAxisArray, tsreducer::Function, reducer::Function=tsreducer) =
+    TimeAxisArray(reducer(A.data), tsreducer(timestamps(A)), A.axes[2:end]...)
 
-downsample{T,N}(A::TimeAxisArray{T,N}, splitter::Function, tsreducer::Function, reducer::Function=tsreducer) =
+downsample(A::TimeAxisArray, splitter::Function, tsreducer::Function, reducer::Function=tsreducer) =
     vcat(map(a -> collapse(a, tsreducer, reducer), split(A, splitter))...)
 
-moving(A::TimeAxisArray) = nothing
+# # TODO: Allow for time-based interval selection (rather than fixed integer range window)
+function moving{T}(A::TimeAxisArray{T}, reducer::Function, window::Int)
+    data = reducer(A[Axis{:Timestamp}(1:window)].data)
+    for i in 2:(size(A,1)+1-window)
+        data = vcat(data, reducer(A[Axis{:Timestamp}(i:i+window-1)].data))
+    end #for
+    return TimeAxisArray(data, timestamps(A)[window:end], A.axes[2:end]...)
+end #moving
 
 function lag(A::TimeAxisArray, k::Int=1)
     n = size(A,1)
