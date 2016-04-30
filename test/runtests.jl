@@ -2,6 +2,9 @@ using TimeAxisArrays
 using Base.Test
 using Base.Dates
 
+Base.isequal(A1::TimeAxisArray, A2::TimeAxisArray) =
+    (collect(timestamps(A1)) == collect(timestamps(A2))) && isequal(A1.data, A2.data)
+
 n = now()
 
 A1d1 = TimeAxisArray(randn(11), n-Hour(2):Hour(1):n+Hour(8))
@@ -26,4 +29,5 @@ A4d = TimeAxisArray(randn(49,2,5,3), n-Day(1):Hour(1):n+Day(1),
               Axis{:Superpages}([:one, :two, :three]))
 @test isa(A4d, RegularTimeAxisArray)
 
+include("operations.jl")
 include("io.jl")
