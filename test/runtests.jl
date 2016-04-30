@@ -5,6 +5,13 @@ using Base.Dates
 Base.isequal(A1::TimeAxisArray, A2::TimeAxisArray) =
     (collect(timestamps(A1)) == collect(timestamps(A2))) && isequal(A1.data, A2.data)
 
+function isapproxequal(A1::TimeAxisArray, A2::TimeAxisArray)
+    notnan = find(!isnan(A1))
+    return (collect(timestamps(A1)) == collect(timestamps(A2))) &&
+           (notnan == find(!isnan(A2))) &&
+           isapprox(A1.data[notnan], A2.data[notnan])
+end #isapproxequal
+
 n = now()
 
 A1d1 = TimeAxisArray(randn(11), n-Hour(2):Hour(1):n+Hour(8))
