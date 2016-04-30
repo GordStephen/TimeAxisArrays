@@ -17,6 +17,14 @@ A4d1 = readtimeaxisarray("4dtest.csv", date(), headlines=3)
 @test downsample(A2d, week, last, x->maximum(x,1)) == TimeAxisArray([A2d.data[[2,4,13],1] A2d.data[[2,4,11],2] A2d.data[[1,7,13],3]], timestamps(A2d)[[3,10,14]], A2d.axes[2])
 
 # moving
+@test isapprox(moving(A1d2, mean, 3), TimeAxisArray(map(mean, TimeAxisArray[A1d2[1:3], A1d2[2:4], A1d2[3:5]]), timestamps(A1d2)[3:5]))
+@test isapprox(moving(A2d, x->maximum(x,1), 10), TimeAxisArray(
+                                                               [[A2d[2,1] A2d[4,2] A2d[7,3]];
+                                                                [A2d[2,1] A2d[4,2] A2d[7,3]];
+                                                                [A2d[3,1] A2d[4,2] A2d[7,3]];
+                                                                [A2d[4,1] A2d[4,2] A2d[13,3]];
+                                                                [A2d[13,1] A2d[5,2] A2d[13,3]]
+                                                                ], timestamps(A2d)[10:end], A2d.axes[2:end]...))
 
 # lead
 T = size(A4d1, 1)
@@ -36,6 +44,10 @@ T = size(A4d1, 1)
 @test lag(A4d1, 2) == TimeAxisArray(A4d1[Axis{:Timestamp}(1:T-2)].data, timestamps(A4d1)[3:end], A4d1.axes[2:end]...)
 
 # diff
+@test isequal(diff(A1d), TimeAxisArray(A1d[2:end] .- A1d[1:end-1], timestamps(A1d)[2:end]))
+@test isequal(diff(A1d, 2), diff(diff(A1d)))
+@test diff(A4d1) == TimeAxisArray(A4d1[2:end,:,:,:] .- A4d1[1:end-1,:,:,:], timestamps(A4d1)[2:end], A4d1.axes[2:end]...)
+@test diff(A4d1, 2) == diff(diff(A4d1))
 
 # percentchange
 T = size(A2d, 1)
