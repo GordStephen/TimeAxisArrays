@@ -1,0 +1,9 @@
+{
+    "docs": [
+        {
+            "location": "/", 
+            "text": "#\n\n\nBase.split\n \n \nFunction\n.\n\n\nsplit(A::TimeAxisArray, f::Function)\n\n\n\n\nReturns an array containing sequential fragments of \nA\n, split according to clusters of values in the mapping of \nf\n over the timestamps of \nA\n.\n\n\n#\n\n\nTimeAxisArrays.collapse\n \n \nFunction\n.\n\n\ncollapse(A::TimeAxisArray, tsreducer::Function, reducer::Function=tsreducer)\n\n\n\n\nCollapses the timestamps of \nA\n to a single observation in the time dimension using \ntsreducer\n. Data is collapsed in the time dimension using \nreducer\n, which defaults to \ntsreducer\n.\n\n\n#\n\n\nTimeAxisArrays.downsample\n \n \nFunction\n.\n\n\ndownsample(A::TimeAxisArray, splitter::Function, tsreducer::Function, reducer::Function=tsreducer)\n\n\n\n\nCombines \nsplit\n, \ncollapse\n, and \nvcat\n to partition \nA\n according to sequential values in the mapping of \nsplitter\n over the timestamps of \nA\n, then collapses each of the split TimeAxisArrays according to \ntsreducer\n (for timestamps) and \nreducer\n (for data), before recombining the collapsed values.", 
+            "title": "Home"
+        }
+    ]
+}
