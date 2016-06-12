@@ -31,7 +31,7 @@ call(::Type{TimeAxisArray}, data::AbstractMatrix, timestamps::AbstractTimeVector
     TimeAxisArray(data, timestamps, Axis{defaultaxisnames[2]}(columns))
 
 call(::Type{TimeAxisArray}, data::AbstractArray, timestamp::Timestamp, axes::CategoricalAxis...) =
-    TimeAxisArray(data, [timestamp], axes...)
+    TimeAxisArray(reshape(data, 1, size(data)...), [timestamp], axes...)
 
 call(::Type{TimeAxisArray}, data, timestamp::Timestamp, axes::CategoricalAxis...) =
     TimeAxisArray([data], [timestamp], axes...)

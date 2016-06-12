@@ -25,30 +25,47 @@ end #split
 # For use with do-notation
 Base.split(f::Function, A::TimeAxisArray) = Base.split(A, f)
 
-# TODO: For collapse and moving, include option (default?) to lift basic 1D->scalar reducer
-#       (rather than hope the supplied function does the right thing and work along the first dimension)
+applytimewise(f::Function, A::AbstractArray) = if ndims(A) == 1
+    return [f(A)]
+else
+    higherdimsizes = size(A)[2:end]
+    result = Array{typeof(f(A[1]))}(1, higherdimsizes...)
+    for inds in product(map(n->1:n, higherdimsizes)...)
+        result[1, inds...] = f(A[:, inds...])
+    end #for
+    return result
+end #applytimewise
+
 """
     collapse(A::TimeAxisArray, tsreducer::Function, reducer::Function=tsreducer)
 
 Collapses the timestamps of `A` to a single observation in the time dimension using `tsreducer`. Data is collapsed in the time dimension using `reducer`, which defaults to `tsreducer`.
 """
-collapse(A::TimeAxisArray, tsreducer::Function, reducer::Function=tsreducer) =
-    TimeAxisArray(reducer(A.data), tsreducer(timestamps(A)), A.axes[2:end]...)
+collapse(A::TimeAxisArray, tsreducer::Function, reducer::Function=tsreducer; lift::Bool=true) = lift ?
+    TimeAxisArray(applytimewise(reducer, A.data), [tsreducer(timestamps(A))], A.axes[2:end]...) :
+    TimeAxisArray(reducer(A.data), [tsreducer(timestamps(A))], A.axes[2:end]...)
 
 """
     downsample(A::TimeAxisArray, splitter::Function, tsreducer::Function, reducer::Function=tsreducer)
 
 Combines `split`, `collapse`, and `vcat` to partition `A` according to sequential values in the mapping of `splitter` over the timestamps of `A`, then collapses each of the split TimeAxisArrays according to `tsreducer` (for timestamps) and `reducer` (for data), before recombining the collapsed values.
 """
-downsample(A::TimeAxisArray, splitter::Function, tsreducer::Function, reducer::Function=tsreducer) =
-    vcat(map(a -> collapse(a, tsreducer, reducer), split(A, splitter))...)
+downsample(A::TimeAxisArray, splitter::Function, tsreducer::Function, reducer::Function=tsreducer; lift::Bool=true) =
+    vcat(map(a -> collapse(a, tsreducer, reducer, lift=lift), split(A, splitter))...)
 
 # # TODO: Allow for time-based interval selection (rather than fixed integer range window)
-function moving{T}(A::TimeAxisArray{T}, reducer::Function, window::Int)
-    data = reducer(A[Axis{:Timestamp}(1:window)].data)
-    for i in 2:(size(A,1)+1-window)
-        data = vcat(data, reducer(A[Axis{:Timestamp}(i:i+window-1)].data))
-    end #for
+function moving{T}(A::TimeAxisArray{T}, reducer::Function, window::Int; lift::Bool=true)
+    if lift
+        data = applytimewise(reducer, A[Axis{:Timestamp}(1:window)].data)
+        for i in 2:(size(A,1)+1-window)
+            data = vcat(data, applytimewise(reducer, A[Axis{:Timestamp}(i:i+window-1)].data))
+        end #for
+    else
+        data = reducer(A[Axis{:Timestamp}(1:window)].data)
+        for i in 2:(size(A,1)+1-window)
+            data = vcat(data, reducer(A[Axis{:Timestamp}(i:i+window-1)].data))
+        end #for
+    end #if
     return TimeAxisArray(data, timestamps(A)[window:end], A.axes[2:end]...)
 end #moving
 

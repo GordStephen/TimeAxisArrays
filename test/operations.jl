@@ -11,15 +11,18 @@ A4d1 = readtimeaxisarray("4dtest.csv", date(), headlines=3)
 
 # collapse
 @test collapse(A1d1, first, mean) == TimeAxisArray(mean(A1d1.data), timestamps(A1d1)[1])
-@test collapse(A2d1, last, x->std(x,1)) == TimeAxisArray(std(A2d1.data, 1), [timestamps(A2d1)[end]], A2d1.axes[2])
+@test collapse(A2d1, last, std) == TimeAxisArray(std(A2d1.data, 1), [timestamps(A2d1)[end]], A2d1.axes[2])
+@test collapse(A2d1, last, std) == collapse(A2d1, last, x->std(x,1), lift=false)
 
 # downsample
 @test downsample(A1d3, week, first) == TimeAxisArray(A1d3.data[[1,4,11]], timestamps(A1d3)[[1,4,11]])
-@test downsample(A2d, week, last, x->maximum(x,1)) == TimeAxisArray([A2d.data[[2,4,13],1] A2d.data[[2,4,11],2] A2d.data[[1,7,13],3]], timestamps(A2d)[[3,10,14]], A2d.axes[2])
+@test downsample(A2d, week, last, maximum) == TimeAxisArray([A2d.data[[2,4,13],1] A2d.data[[2,4,11],2] A2d.data[[1,7,13],3]], timestamps(A2d)[[3,10,14]], A2d.axes[2])
+@test downsample(A2d, week, last, maximum) == downsample(A2d, week, last, x->maximum(x,1), lift=false)
 
 # moving
 @test isapprox(moving(A1d2, mean, 3), TimeAxisArray(map(mean, TimeAxisArray[A1d2[1:3], A1d2[2:4], A1d2[3:5]]), timestamps(A1d2)[3:5]))
-@test isapprox(moving(A2d, x->maximum(x,1), 10), TimeAxisArray(
+@test isapprox(moving(A2d, x->maximum(x,1), 10, lift=false), moving(A2d, maximum, 10))
+@test isapprox(moving(A2d, maximum, 10), TimeAxisArray(
                                                                [[A2d[2,1] A2d[4,2] A2d[7,3]];
                                                                 [A2d[2,1] A2d[4,2] A2d[7,3]];
                                                                 [A2d[3,1] A2d[4,2] A2d[7,3]];
