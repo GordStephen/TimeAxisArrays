@@ -104,12 +104,18 @@
           <div role="main">
             <div class="section">
               
-                <p><a id='Base.split' href='#Base.split'>#</a>
+                <p><a id='Base.LinAlg.diff' href='#Base.LinAlg.diff'>#</a>
+<strong><code>Base.LinAlg.diff</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>diff(A::TimeAxisArray, k::Int=1)
+</code></pre>
+
+<p>Perform <code>k</code>th order differencing across time observations in <code>A</code>.</p>
+<p><a id='Base.split' href='#Base.split'>#</a>
 <strong><code>Base.split</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>split(A::TimeAxisArray, f::Function)
 </code></pre>
 
-<p>Returns an array containing sequential fragments of <code>A</code>, split according to clusters of values in the mapping of <code>f</code> over the timestamps of <code>A</code>.</p>
+<p>Returns an array containing sequential fragments of <code>A</code>, split according to clusters of values in the mapping of <code>f</code> over the timestamps of <code>A</code>. <code>split(f, A)</code> is also defined so as to support do-notation.</p>
 <p><a id='TimeAxisArrays.collapse' href='#TimeAxisArrays.collapse'>#</a>
 <strong><code>TimeAxisArrays.collapse</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>collapse(A::TimeAxisArray, tsreducer::Function, reducer::Function=tsreducer)
@@ -122,6 +128,42 @@
 </code></pre>
 
 <p>Combines <code>split</code>, <code>collapse</code>, and <code>vcat</code> to partition <code>A</code> according to sequential values in the mapping of <code>splitter</code> over the timestamps of <code>A</code>, then collapses each of the split TimeAxisArrays according to <code>tsreducer</code> (for timestamps) and <code>reducer</code> (for data), before recombining the collapsed values.</p>
+<p><a id='TimeAxisArrays.dropif' href='#TimeAxisArrays.dropif'>#</a>
+<strong><code>TimeAxisArrays.dropif</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>dropif(selector::Function, predicate::Function, A::TimeAxisArray)
+</code></pre>
+
+<p>Drops observations at timestamps where <code>selector</code> (e.g. <code>any</code>, <code>all</code>) data values statisfy <code>predicate</code>.</p>
+<p><a id='TimeAxisArrays.dropnan' href='#TimeAxisArrays.dropnan'>#</a>
+<strong><code>TimeAxisArrays.dropnan</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>dropnan(selector::Function, A::TimeAxisArray)
+</code></pre>
+
+<p>Drops observations at timestamps where <code>selector</code> (e.g. <code>any</code>, <code>all</code>) data values are NaN. Equivalent to <code>dropif(selector, isnan, A)</code></p>
+<p><a id='TimeAxisArrays.lag' href='#TimeAxisArrays.lag'>#</a>
+<strong><code>TimeAxisArrays.lag</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>lag(A::TimeAxisArray, k::Int=1)
+</code></pre>
+
+<p>Shifts all observations in <code>A</code> later in time by <code>k</code> timestamps.</p>
+<p><a id='TimeAxisArrays.lead' href='#TimeAxisArrays.lead'>#</a>
+<strong><code>TimeAxisArrays.lead</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>lead(A::TimeAxisArray, k::Int=1)
+</code></pre>
+
+<p>Shifts all observations in <code>A</code> earlier in time by <code>k</code> timestamps.</p>
+<p><a id='TimeAxisArrays.moving' href='#TimeAxisArrays.moving'>#</a>
+<strong><code>TimeAxisArrays.moving</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>moving(A::TimeAxisArray, reducer::Function, n::Int)
+</code></pre>
+
+<p>Applies a time-wise reduction specified by <code>reducer</code> to a moving window of <code>n</code> observations, storing the result at the last timestamp in the window.</p>
+<p><a id='TimeAxisArrays.percentchange' href='#TimeAxisArrays.percentchange'>#</a>
+<strong><code>TimeAxisArrays.percentchange</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>percentchange(A::TimeAxisArray; logdiff::Bool=false)
+</code></pre>
+
+<p>Computes the percent change between observations in time in <code>A</code>. If <code>logdiff</code> is true, returns the difference of log-transformed values.</p>
               
             </div>
           </div>
@@ -160,5 +202,5 @@
 
 <!--
 MkDocs version : 0.15.3
-Build Date UTC : 2016-06-12 20:41:05.681552
+Build Date UTC : 2016-06-12 21:17:59.464098
 -->
