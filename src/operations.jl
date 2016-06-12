@@ -1,7 +1,7 @@
 """
     split(A::TimeAxisArray, f::Function)
 
-Returns an array containing sequential fragments of `A`, split according to clusters of values in the mapping of `f` over the timestamps of `A`.
+Returns an array containing sequential fragments of `A`, split according to clusters of values in the mapping of `f` over the timestamps of `A`. `split(f, A)` is also defined so as to support do-notation.
 """
 function Base.split(A::TimeAxisArray, f::Function)
 
@@ -54,6 +54,11 @@ downsample(A::TimeAxisArray, splitter::Function, tsreducer::Function, reducer::F
     vcat(map(a -> collapse(a, tsreducer, reducer, lift=lift), split(A, splitter))...)
 
 # # TODO: Allow for time-based interval selection (rather than fixed integer range window)
+"""
+    moving(A::TimeAxisArray, reducer::Function, n::Int)
+
+Applies a time-wise reduction specified by `reducer` to a moving window of `n` observations, storing the result at the last timestamp in the window.
+"""
 function moving{T}(A::TimeAxisArray{T}, reducer::Function, window::Int; lift::Bool=true)
     if lift
         data = applytimewise(reducer, A[Axis{:Timestamp}(1:window)].data)
@@ -69,16 +74,31 @@ function moving{T}(A::TimeAxisArray{T}, reducer::Function, window::Int; lift::Bo
     return TimeAxisArray(data, timestamps(A)[window:end], A.axes[2:end]...)
 end #moving
 
+"""
+    lag(A::TimeAxisArray, k::Int=1)
+
+Shifts all observations in `A` later in time by `k` timestamps.
+"""
 function lag(A::TimeAxisArray, k::Int=1)
     n = size(A,1)
     return TimeAxisArray(A[Axis{:Timestamp}(1:n-k)].data, timestamps(A)[1+k:n], A.axes[2:end]...)
 end #lag
 
+"""
+    lead(A::TimeAxisArray, k::Int=1)
+
+Shifts all observations in `A` earlier in time by `k` timestamps.
+"""
 function lead(A::TimeAxisArray, k::Int=1)
     n = size(A,1)
     return TimeAxisArray(A[Axis{:Timestamp}(1+k:n)].data, timestamps(A)[1:n-k], A.axes[2:end]...)
 end #lead
 
+"""
+    diff(A::TimeAxisArray, k::Int=1)
+
+Perform `k`th order differencing across time observations in `A`.
+"""
 Base.diff(A::TimeAxisArray, k::Int=1) = if k == 1
     n = size(A,1)
     return TimeAxisArray(A[Axis{:Timestamp}(2:n)].data .- A[Axis{:Timestamp}(1:n-1)].data, timestamps(A)[2:n], A.axes[2:end]...)
@@ -86,11 +106,21 @@ else
     return diff(diff(A, k-1))
 end #if
 
+"""
+    percentchange(A::TimeAxisArray; logdiff::Bool=false)
+
+Computes the percent change between observations in time in `A`. If `logdiff` is true, returns the difference of log-transformed values.
+"""
 function percentchange(A::TimeAxisArray; logdiff::Bool=false)
     n = size(A,1)
     return logdiff ? diff(map(log,A)) : TimeAxisArray(A[Axis{:Timestamp}(2:n)] ./  A[Axis{:Timestamp}(1:n-1)] .- 1, timestamps(A)[2:end], A.axes[2:end]...)
 end #percentchange
 
+"""
+    dropif(selector::Function, predicate::Function, A::TimeAxisArray)
+
+Drops observations at timestamps where `selector` (e.g. `any`, `all`) data values statisfy `predicate`.
+"""
 function dropif(selector::Function, predicate::Function, A::TimeAxisArray)
     keepers = Int[]
     for i in 1:size(A,1)
@@ -99,4 +129,9 @@ function dropif(selector::Function, predicate::Function, A::TimeAxisArray)
     return A[Axis{:Timestamp}(keepers)]
 end #dropif
 
+"""
+    dropnan(selector::Function, A::TimeAxisArray)
+
+Drops observations at timestamps where `selector` (e.g. `any`, `all`) data values are NaN. Equivalent to `dropif(selector, isnan, A)`
+"""
 dropnan(A::TimeAxisArray, selector::Function=all) = dropif(selector, isnan, A)
