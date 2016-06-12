@@ -7,5 +7,6 @@ makedocs(
 deploydocs(
     deps   = Deps.pip("mkdocs", "python-markdown-math"),
     repo   = "github.com/GordStephen/TimeAxisArrays.jl.git",
-    julia  = "0.4"
+    julia  = "release",
+    osname = "linux"
 )
