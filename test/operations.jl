@@ -5,6 +5,7 @@ A2d = readtimeaxisarray("2dtest.csv", date())
 A4d1 = readtimeaxisarray("4dtest.csv", date(), headlines=3)
 
 # split
+@test split(A4d1, week) == split(week, A4d1)
 @test map(size, split(A1d3, week)) == [(3,), (7,), (4,)]
 @test map(size, split(A2d, week)) == [(3,3), (7,3), (4,3)]
 

@@ -6,7 +6,7 @@ using Reexport, Iterators
 export TimeAxisArray, RegularTimeAxisArray,
 timestamps, interval,
 collapse, downsample, moving,
-lead, lag, diff, percentchange,
+lead, lag, percentchange,
 dropif, dropnan,
 readtimeaxisarray, date, datetime
 

@@ -1,3 +1,8 @@
+"""
+    split(A::TimeAxisArray, f::Function)
+
+Returns an array containing sequential fragments of `A`, split according to clusters of values in the mapping of `f` over the timestamps of `A`.
+"""
 function Base.split(A::TimeAxisArray, f::Function)
 
     discriminants = map(f, timestamps(A))
@@ -20,17 +25,21 @@ end #split
 # For use with do-notation
 Base.split(f::Function, A::TimeAxisArray) = Base.split(A, f)
 
-function Base.vcat(taas::TimeAxisArray...)
-    ts = vcat(map(timestamps, taas)...)
-    data = vcat(map(taa -> taa.data, taas)...)
-    return TimeAxisArray(data, ts, taas[1].axes[2:end]...)
-end #vcat
-
 # TODO: For collapse and moving, include option (default?) to lift basic 1D->scalar reducer
 #       (rather than hope the supplied function does the right thing and work along the first dimension)
+"""
+    collapse(A::TimeAxisArray, tsreducer::Function, reducer::Function=tsreducer)
+
+Collapses the timestamps of `A` to a single observation in the time dimension using `tsreducer`. Data is collapsed in the time dimension using `reducer`, which defaults to `tsreducer`.
+"""
 collapse(A::TimeAxisArray, tsreducer::Function, reducer::Function=tsreducer) =
     TimeAxisArray(reducer(A.data), tsreducer(timestamps(A)), A.axes[2:end]...)
 
+"""
+    downsample(A::TimeAxisArray, splitter::Function, tsreducer::Function, reducer::Function=tsreducer)
+
+Combines `split`, `collapse`, and `vcat` to partition `A` according to sequential values in the mapping of `splitter` over the timestamps of `A`, then collapses each of the split TimeAxisArrays according to `tsreducer` (for timestamps) and `reducer` (for data), before recombining the collapsed values.
+"""
 downsample(A::TimeAxisArray, splitter::Function, tsreducer::Function, reducer::Function=tsreducer) =
     vcat(map(a -> collapse(a, tsreducer, reducer), split(A, splitter))...)
 
