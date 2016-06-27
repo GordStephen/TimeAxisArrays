@@ -21,4 +21,11 @@ markdown_extensions:
 docs_dir: 'build'
 
 pages:
-  - Home: index.md
+  - 'Home': 'index.md'
+  - 'User Guide':
+      - 'Getting Started': 'man/getting-started.md'
+      - 'Combining TimeAxisArrays': 'man/combining.md'
+      - 'Splitting, collapsing, and downsampling on timestamps': 'man/downsampling.md'
+      - 'Other time series tools': 'man/other.md'
+      - 'File IO': 'man/file-io.md'
+  - 'Function Reference': 'lib/index.md'

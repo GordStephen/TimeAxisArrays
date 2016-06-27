@@ -9,7 +9,7 @@ This package is currently a work-in-progress and so is unregistered - to install
 julia> Pkg.clone("https://github.com/GordStephen/TimeAxisArrays.jl")
 ```
 
-## Contents
+## User Guide
 
 ```@contents
 Pages = [
