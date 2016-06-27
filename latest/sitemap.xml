@@ -9,4 +9,46 @@
     </url>
     
 
+    
+        
+    <url>
+     <loc>None/man/getting-started/</loc>
+     <lastmod>2016-06-27</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/man/combining/</loc>
+     <lastmod>2016-06-27</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/man/downsampling/</loc>
+     <lastmod>2016-06-27</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/man/other/</loc>
+     <lastmod>2016-06-27</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/man/file-io/</loc>
+     <lastmod>2016-06-27</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+    
+    <url>
+     <loc>None/lib/</loc>
+     <lastmod>2016-06-27</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
 </urlset>

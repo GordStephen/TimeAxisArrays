@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="GordStephen">
+  
+  <title>Function Reference - TimeAxisArrays.jl</title>
+  
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  <link href="../assets/Documenter.css" rel="stylesheet">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Function Reference";
+    var mkdocs_page_input_path = "lib/index.md";
+    var mkdocs_page_url = "/lib/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script src="../js/theme.js"></script> 
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <script src="../assets/mathjaxhelper.js"></script>
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> TimeAxisArrays.jl</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Home</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>User Guide</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../man/getting-started/">Getting Started</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../man/combining/">Combining TimeAxisArrays</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../man/downsampling/">Splitting, collapsing, and downsampling on timestamps</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../man/other/">Other time series tools</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../man/file-io/">File IO</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Function Reference</a>
+        
+            <ul>
+            
+            </ul>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">TimeAxisArrays.jl</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Function Reference</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+          <a href="https://github.com/GordStephen/TimeAxisArrays.jl" class="icon icon-github"> Edit on GitHub</a>
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><a id='Base.LinAlg.diff' href='#Base.LinAlg.diff'>#</a>
+<strong><code>Base.LinAlg.diff</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>diff(A::TimeAxisArray, k::Int=1)
+</code></pre>
+
+<p>Perform <code>k</code>th order differencing across time observations in <code>A</code>.</p>
+<p><a id='Base.split' href='#Base.split'>#</a>
+<strong><code>Base.split</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>split(A::TimeAxisArray, f::Function)
+</code></pre>
+
+<p>Returns an array containing sequential fragments of <code>A</code>, split according to clusters of values in the mapping of <code>f</code> over the timestamps of <code>A</code>. <code>split(f, A)</code> is also defined so as to support do-notation.</p>
+<p><a id='TimeAxisArrays.collapse' href='#TimeAxisArrays.collapse'>#</a>
+<strong><code>TimeAxisArrays.collapse</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>collapse(A::TimeAxisArray, tsreducer::Function, reducer::Function=tsreducer)
+</code></pre>
+
+<p>Collapses the timestamps of <code>A</code> to a single observation in the time dimension using <code>tsreducer</code>. Data is collapsed in the time dimension using <code>reducer</code>, which defaults to <code>tsreducer</code>.</p>
+<p><a id='TimeAxisArrays.downsample' href='#TimeAxisArrays.downsample'>#</a>
+<strong><code>TimeAxisArrays.downsample</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>downsample(A::TimeAxisArray, splitter::Function, tsreducer::Function, reducer::Function=tsreducer)
+</code></pre>
+
+<p>Combines <code>split</code>, <code>collapse</code>, and <code>vcat</code> to partition <code>A</code> according to sequential values in the mapping of <code>splitter</code> over the timestamps of <code>A</code>, then collapses each of the split TimeAxisArrays according to <code>tsreducer</code> (for timestamps) and <code>reducer</code> (for data), before recombining the collapsed values.</p>
+<p><a id='TimeAxisArrays.dropif' href='#TimeAxisArrays.dropif'>#</a>
+<strong><code>TimeAxisArrays.dropif</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>dropif(selector::Function, predicate::Function, A::TimeAxisArray)
+</code></pre>
+
+<p>Drops observations at timestamps where <code>selector</code> (e.g. <code>any</code>, <code>all</code>) data values statisfy <code>predicate</code>.</p>
+<p><a id='TimeAxisArrays.dropnan' href='#TimeAxisArrays.dropnan'>#</a>
+<strong><code>TimeAxisArrays.dropnan</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>dropnan(selector::Function, A::TimeAxisArray)
+</code></pre>
+
+<p>Drops observations at timestamps where <code>selector</code> (e.g. <code>any</code>, <code>all</code>) data values are NaN. Equivalent to <code>dropif(selector, isnan, A)</code></p>
+<p><a id='TimeAxisArrays.lag' href='#TimeAxisArrays.lag'>#</a>
+<strong><code>TimeAxisArrays.lag</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>lag(A::TimeAxisArray, k::Int=1)
+</code></pre>
+
+<p>Shifts all observations in <code>A</code> later in time by <code>k</code> timestamps.</p>
+<p><a id='TimeAxisArrays.lead' href='#TimeAxisArrays.lead'>#</a>
+<strong><code>TimeAxisArrays.lead</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>lead(A::TimeAxisArray, k::Int=1)
+</code></pre>
+
+<p>Shifts all observations in <code>A</code> earlier in time by <code>k</code> timestamps.</p>
+<p><a id='TimeAxisArrays.moving' href='#TimeAxisArrays.moving'>#</a>
+<strong><code>TimeAxisArrays.moving</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>moving(A::TimeAxisArray, reducer::Function, n::Int)
+</code></pre>
+
+<p>Applies a time-wise reduction specified by <code>reducer</code> to a moving window of <code>n</code> observations, storing the result at the last timestamp in the window.</p>
+<p><a id='TimeAxisArrays.percentchange' href='#TimeAxisArrays.percentchange'>#</a>
+<strong><code>TimeAxisArrays.percentchange</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>percentchange(A::TimeAxisArray; logdiff::Bool=false)
+</code></pre>
+
+<p>Computes the percent change between observations in time in <code>A</code>. If <code>logdiff</code> is true, returns the difference of log-transformed values.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../man/file-io/" class="btn btn-neutral" title="File IO"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/GordStephen/TimeAxisArrays.jl" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../man/file-io/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+
+</body>
+</html>
