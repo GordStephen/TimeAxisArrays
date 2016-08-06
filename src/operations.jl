@@ -51,7 +51,7 @@ collapse(A::TimeAxisArray, tsreducer::Function, reducer::Function=tsreducer; lif
 Combines `split`, `collapse`, and `vcat` to partition `A` according to sequential values in the mapping of `splitter` over the timestamps of `A`, then collapses each of the split TimeAxisArrays according to `tsreducer` (for timestamps) and `reducer` (for data), before recombining the collapsed values.
 """
 downsample(A::TimeAxisArray, splitter::Function, tsreducer::Function, reducer::Function=tsreducer; lift::Bool=true) =
-    vcat(map(a -> collapse(a, tsreducer, reducer, lift=lift), split(A, splitter))...)
+    cat(1, map(a -> collapse(a, tsreducer, reducer, lift=lift), split(A, splitter))...)
 
 # # TODO: Allow for time-based interval selection (rather than fixed integer range window)
 """

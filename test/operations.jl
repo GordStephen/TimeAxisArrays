@@ -10,7 +10,7 @@ A4d1 = readtimeaxisarray("4dtest.csv", date(), headlines=3)
 @test map(size, split(A2d, week)) == [(3,3), (7,3), (4,3)]
 
 # collapse
-@test collapse(A1d1, first, mean) == TimeAxisArray(mean(A1d1.data), timestamps(A1d1)[1])
+@test collapse(A1d1, first, mean) == TimeAxisArray([mean(A1d1.data)], timestamps(A1d1)[1:1])
 @test collapse(A2d1, last, std) == TimeAxisArray(std(A2d1.data, 1), [timestamps(A2d1)[end]], A2d1.axes[2])
 @test collapse(A2d1, last, std) == collapse(A2d1, last, x->std(x,1), lift=false)
 

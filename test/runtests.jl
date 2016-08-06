@@ -12,6 +12,9 @@ function isapproxequal(A1::TimeAxisArray, A2::TimeAxisArray)
            isapprox(A1.data[notnan], A2.data[notnan])
 end #isapproxequal
 
+@test isa(TimeAxisArray(randn(5,2,2), 1:5, [:A, :B], [:High, :Low]), RegularTimeAxisArray)
+@test isa(TimeAxisArray(randn(5,2,2), collect(1:5), [:A, :B], [:High, :Low]), TimeAxisArray)
+
 n = now()
 
 A1d1 = TimeAxisArray(randn(11), n-Hour(2):Hour(1):n+Hour(8))
