@@ -160,8 +160,8 @@
 </code></pre>
 
 <p>Perform <code>k</code>th order differencing across time observations in <code>A</code>.</p>
-<p><a id='Base.split' href='#Base.split'>#</a>
-<strong><code>Base.split</code></strong> &mdash; <em>Function</em>.</p>
+<p><a id='Base.split-Tuple{AxisArrays.AxisArray{T,N,D,Ax<:Tuple{AxisArrays.Axis{:Timestamp,T<:AbstractArray{T<:Union{Base.Dates.AbstractTime,Number},1}},Vararg{AxisArrays.Axis{T,Array{Symbol,1}}}}},Function}' href='#Base.split-Tuple{AxisArrays.AxisArray{T,N,D,Ax<:Tuple{AxisArrays.Axis{:Timestamp,T<:AbstractArray{T<:Union{Base.Dates.AbstractTime,Number},1}},Vararg{AxisArrays.Axis{T,Array{Symbol,1}}}}},Function}'>#</a>
+<strong><code>Base.split</code></strong> &mdash; <em>Method</em>.</p>
 <pre><code>split(A::TimeAxisArray, f::Function)
 </code></pre>
 
@@ -178,8 +178,8 @@
 </code></pre>
 
 <p>Combines <code>split</code>, <code>collapse</code>, and <code>vcat</code> to partition <code>A</code> according to sequential values in the mapping of <code>splitter</code> over the timestamps of <code>A</code>, then collapses each of the split TimeAxisArrays according to <code>tsreducer</code> (for timestamps) and <code>reducer</code> (for data), before recombining the collapsed values.</p>
-<p><a id='TimeAxisArrays.dropif' href='#TimeAxisArrays.dropif'>#</a>
-<strong><code>TimeAxisArrays.dropif</code></strong> &mdash; <em>Function</em>.</p>
+<p><a id='TimeAxisArrays.dropif-Tuple{Function,Function,AxisArrays.AxisArray{T,N,D,Ax<:Tuple{AxisArrays.Axis{:Timestamp,T<:AbstractArray{T<:Union{Base.Dates.AbstractTime,Number},1}},Vararg{AxisArrays.Axis{T,Array{Symbol,1}}}}}}' href='#TimeAxisArrays.dropif-Tuple{Function,Function,AxisArrays.AxisArray{T,N,D,Ax<:Tuple{AxisArrays.Axis{:Timestamp,T<:AbstractArray{T<:Union{Base.Dates.AbstractTime,Number},1}},Vararg{AxisArrays.Axis{T,Array{Symbol,1}}}}}}'>#</a>
+<strong><code>TimeAxisArrays.dropif</code></strong> &mdash; <em>Method</em>.</p>
 <pre><code>dropif(selector::Function, predicate::Function, A::TimeAxisArray)
 </code></pre>
 
@@ -202,14 +202,14 @@
 </code></pre>
 
 <p>Shifts all observations in <code>A</code> earlier in time by <code>k</code> timestamps.</p>
-<p><a id='TimeAxisArrays.moving' href='#TimeAxisArrays.moving'>#</a>
-<strong><code>TimeAxisArrays.moving</code></strong> &mdash; <em>Function</em>.</p>
+<p><a id='TimeAxisArrays.moving-Tuple{AxisArrays.AxisArray{T,N,D,Ax<:Tuple{AxisArrays.Axis{:Timestamp,T<:AbstractArray{T<:Union{Base.Dates.AbstractTime,Number},1}},Vararg{AxisArrays.Axis{T,Array{Symbol,1}}}}},Function,Int64}' href='#TimeAxisArrays.moving-Tuple{AxisArrays.AxisArray{T,N,D,Ax<:Tuple{AxisArrays.Axis{:Timestamp,T<:AbstractArray{T<:Union{Base.Dates.AbstractTime,Number},1}},Vararg{AxisArrays.Axis{T,Array{Symbol,1}}}}},Function,Int64}'>#</a>
+<strong><code>TimeAxisArrays.moving</code></strong> &mdash; <em>Method</em>.</p>
 <pre><code>moving(A::TimeAxisArray, reducer::Function, n::Int)
 </code></pre>
 
 <p>Applies a time-wise reduction specified by <code>reducer</code> to a moving window of <code>n</code> observations, storing the result at the last timestamp in the window.</p>
-<p><a id='TimeAxisArrays.percentchange' href='#TimeAxisArrays.percentchange'>#</a>
-<strong><code>TimeAxisArrays.percentchange</code></strong> &mdash; <em>Function</em>.</p>
+<p><a id='TimeAxisArrays.percentchange-Tuple{AxisArrays.AxisArray{T,N,D,Ax<:Tuple{AxisArrays.Axis{:Timestamp,T<:AbstractArray{T<:Union{Base.Dates.AbstractTime,Number},1}},Vararg{AxisArrays.Axis{T,Array{Symbol,1}}}}}}' href='#TimeAxisArrays.percentchange-Tuple{AxisArrays.AxisArray{T,N,D,Ax<:Tuple{AxisArrays.Axis{:Timestamp,T<:AbstractArray{T<:Union{Base.Dates.AbstractTime,Number},1}},Vararg{AxisArrays.Axis{T,Array{Symbol,1}}}}}}'>#</a>
+<strong><code>TimeAxisArrays.percentchange</code></strong> &mdash; <em>Method</em>.</p>
 <pre><code>percentchange(A::TimeAxisArray; logdiff::Bool=false)
 </code></pre>
 
