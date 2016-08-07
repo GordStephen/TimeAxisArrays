@@ -1,3 +1,20 @@
+function Base.filter(f::Function, A::TimeAxisArray)
+
+    n = size(A,1)
+    predresults = Array{Bool}(n)
+    tstamps = timestamp(A)
+
+    for i in 1:n
+        ts = tstamps[i]
+        predvals[i] = f(ts, A[Axis{:Timestamp}(ts)])
+    end #for
+
+    return A[Axis{:Timestamp}(predvals)]
+end #filter
+
+filtertimestamps(f::Function, A::TimeAxisArray) = filter((ts,v)->f(ts), A)
+filtervalues(f::Function, A::TimeAxisArray) = filter((ts,v)->f(v), A)
+
 """
     split(A::TimeAxisArray, f::Function)
 
