@@ -10,9 +10,9 @@ A4d1 = readtimeaxisarray("4dtest.csv", date(), headlines=3)
 @test map(size, split(A2d, week)) == [(3,3), (7,3), (4,3)]
 
 # collapse
-@test collapse(A1d1, first, mean) == TimeAxisArray([mean(A1d1.data)], timestamps(A1d1)[1:1])
-@test collapse(A2d1, last, std) == TimeAxisArray(std(A2d1.data, 1), [timestamps(A2d1)[end]], A2d1.axes[2])
-@test collapse(A2d1, last, std) == collapse(A2d1, last, x->std(x,1), lift=false)
+@test collapse(A1d1, first, mean) ≈ TimeAxisArray([mean(A1d1.data)], timestamps(A1d1)[1:1])
+@test collapse(A2d1, last, std) ≈ TimeAxisArray(std(A2d1.data, 1), [timestamps(A2d1)[end]], A2d1.axes[2])
+@test collapse(A2d1, last, std) ≈ collapse(A2d1, last, x->std(x,1), lift=false)
 
 # downsample
 @test downsample(A1d3, week, first) == TimeAxisArray(A1d3.data[[1,4,11]], timestamps(A1d3)[[1,4,11]])
@@ -20,15 +20,15 @@ A4d1 = readtimeaxisarray("4dtest.csv", date(), headlines=3)
 @test downsample(A2d, week, last, maximum) == downsample(A2d, week, last, x->maximum(x,1), lift=false)
 
 # moving
-@test isapprox(moving(A1d2, mean, 3), TimeAxisArray(map(mean, TimeAxisArray[A1d2[1:3], A1d2[2:4], A1d2[3:5]]), timestamps(A1d2)[3:5]))
-@test isapprox(moving(A2d, x->maximum(x,1), 10, lift=false), moving(A2d, maximum, 10))
-@test isapprox(moving(A2d, maximum, 10), TimeAxisArray(
+@test moving(A1d2, mean, 3) ≈ TimeAxisArray(map(mean, TimeAxisArray[A1d2[1:3], A1d2[2:4], A1d2[3:5]]), timestamps(A1d2)[3:5])
+@test moving(A2d, x->maximum(x,1), 10, lift=false) == moving(A2d, maximum, 10)
+@test moving(A2d, maximum, 10) == TimeAxisArray(
                                                                [[A2d[2,1] A2d[4,2] A2d[7,3]];
                                                                 [A2d[2,1] A2d[4,2] A2d[7,3]];
                                                                 [A2d[3,1] A2d[4,2] A2d[7,3]];
                                                                 [A2d[4,1] A2d[4,2] A2d[13,3]];
                                                                 [A2d[13,1] A2d[5,2] A2d[13,3]]
-                                                                ], timestamps(A2d)[10:end], A2d.axes[2:end]...))
+                                                                ], timestamps(A2d)[10:end], A2d.axes[2:end]...)
 
 # lead
 T = size(A4d1, 1)
