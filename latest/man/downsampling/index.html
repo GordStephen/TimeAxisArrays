@@ -171,10 +171,29 @@
 <h1 id="splitting-collapsing-and-downsampling-on-timestamps">Splitting, collapsing, and downsampling on timestamps</h1>
 <p><a id='Splitting-1'></a></p>
 <h2 id="splitting">Splitting</h2>
+<p><code>split</code> partitions a <code>TimeAxisArray</code> into subgroups of array elements according to sequential timestamps that return the same value for some function. For example, to split apart a <code>TimeAxisArray</code> into multiple parts corresponding to different weeks:</p>
+<pre><code class="julia">using TimeAxisArrays
+
+a = TimeAxisArray(randn(10), Date(2000,1,1):Date(2000,1,14))
+split(a, Dates.week)
+</code></pre>
+
 <p><a id='Collapsing-1'></a></p>
 <h2 id="collapsing">Collapsing</h2>
+<p><code>collapse</code> reduces a <code>TimeAxisArray</code> to a single timestamp and corresponding values in each higher dimension. For example, to take the first timestamp of the input and the first value timewise in each other axis:</p>
+<pre><code class="julia">b = TimeAxisArray(randn(5,3), Date(2000,1,1):Date(2000,1,:5), [:A, :B, :C])
+collapse(a, first)
+</code></pre>
+
+<p>The value reduction function can optionally be specified separately from the timestamp reducer:</p>
+<pre><code class="julia">collapse(b, first, sum)
+</code></pre>
+
 <p><a id='Downsampling-1'></a></p>
 <h2 id="downsampling">Downsampling</h2>
+<p><code>downsample</code> combines <code>split</code> and <code>collapse</code> to group clusters of values in time, and then reduce the clusters to single values. For example, to downsample observations to a weekly average labelled by the first day of the week:</p>
+<pre><code class="julia">downsample(a, Dates.week, first, mean)
+</code></pre>
               
             </div>
           </div>

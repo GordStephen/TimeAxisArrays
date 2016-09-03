@@ -167,10 +167,41 @@
               
                 <p><a id='Combing-multiple-TimeAxisArrays-1'></a></p>
 <h1 id="combing-multiple-timeaxisarrays">Combing multiple TimeAxisArrays</h1>
+<p><code>TimeAxisArray</code> combination methods are identical to those in <code>AxisArray</code>, but are documented here for convenience.</p>
 <p><a id='Combining-on-existing-axes-1'></a></p>
 <h2 id="combining-on-existing-axes">Combining on existing axes</h2>
+<p>Multiple <code>TimeAxisArray</code>s can be joined together along an existing axis with <code>merge</code> - this can be thought of as an axis-aware form of concatenation:</p>
+<pre><code class="julia">a = TimeAxisArray(ones(5), 7:11)
+b = TimeAxisArray(zeros(5), 1:5)
+merge(a,b)
+</code></pre>
+
+<p><code>merge</code> works along any number of axes. If an axis coordinate appears more than once in the <code>TimeAxisArray</code>s to be merged, the value in the last provided input is kept.</p>
+<pre><code class="julia">a = TimeAxisArray(ones(5,2), 1:5, [:A, :B])
+b = TimeAxisArray(zeros(5,2), 3:7, [:B, :C])
+merge(a,b)
+</code></pre>
+
+<p>As shown above, in some cases new array elements that were not defined in any of the inputs to the merge will be created. By default these values are zero, but they can be set to any arbitrary value with the <code>fillvalue</code> keyword:</p>
+<pre><code class="julia">merge(a,b, fillvalue=NaN)
+</code></pre>
+
 <p><a id='Combining-into-a-new-axis-1'></a></p>
 <h2 id="combining-into-a-new-axis">Combining into a new axis</h2>
+<p><code>TimeAxisArrays</code> can also be combined so as to preserve elements at repeated axis coordinates by combining the inputs along a newly created axis with the <code>join</code> method:</p>
+<pre><code class="julia">join(a,b)
+</code></pre>
+
+<p>The name and values of the new axis can be specified using the <code>newaxis</code> keyword, and <code>fillvalue</code> can be provided as with <code>merge</code>:</p>
+<pre><code class="julia">join(a,b, newaxis=Axis{:Order}([:First, :Second]), fillvalue=NaN)
+</code></pre>
+
+<p>Inner, left, right, and outer join methods are supported, with outer used by default:</p>
+<pre><code class="julia">join(a, b, method=:outer) # same as join(a,b)
+join(a, b, method=:left)
+join(a, b, method=:right)
+join(a, b, method=:inner)
+</code></pre>
               
             </div>
           </div>

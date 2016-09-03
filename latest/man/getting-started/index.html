@@ -168,9 +168,46 @@
                 <p><a id='Getting-Started-1'></a></p>
 <h1 id="getting-started">Getting Started</h1>
 <p><a id='Creating-TimeAxisArrays-1'></a></p>
-<h2 id="creating-timeaxisarrays">Creating TimeAxisArrays</h2>
+<h2 id="creating-timeaxisarrays">Creating <code>TimeAxisArray</code>s</h2>
+<p>A simple one-dimensional<code>TimeAxisArray</code> can be created with as:</p>
+<pre><code class="julia">using TimeAxisArrays
+
+tstamps = 1:10
+data = randn(10)
+TimeAxisArray(data, timestamps)
+</code></pre>
+
+<p>Timestamps can be any sortable type. For example, <code>Date</code>s or <code>DateTime</code>s are often useful as timestamps:</p>
+<pre><code class="julia">tstamps = Date(2000,1,1):Date(2000,1,10)
+TimeAxisArray(data, timestamps)
+</code></pre>
+
+<p>In additional to a temporal dimension, <code>TimeAxisArray</code>s can store data across an arbitrary number of categorical dimensions as well. For example:</p>
+<pre><code class="julia">data = randn(10, 3, 2)
+TimeAxisArray(data, timestamps, [:Red, :Green, :Blue], [:Apple, :Banana])
+</code></pre>
+
+<p>The first dimension (axis) is always called <code>Timestamp</code>. Subsequent axes are automatically assigned names, but can be given custom names as well:</p>
+<pre><code class="julia">a = TimeAxisArray(data, timestamps, Axis{:Color}([:Red, :Green, :Blue]), Axis{:Fruit}([:Apple, :Banana]))
+
+</code></pre>
+
 <p><a id='Indexing-1'></a></p>
 <h2 id="indexing">Indexing</h2>
+<p>Indexing is identical to <code>AxisArray</code>s. As with standard <code>Array</code>s, individual elements or ranges can be accessed by providing the relevant value along each axis:</p>
+<pre><code class="julia">a[Date(2000,1,3), :Green, :Banana]
+a[Date(2000,1,3), [:Red, :Blue], :Banana]
+a[Date(2000,1,3), :, :Banana]
+</code></pre>
+
+<p>In some cases it's preferable to only reference data according to a specific axis. In those cases the <code>Axis</code> constructor can be used:</p>
+<pre><code class="julia">a[Axis{:Fruit}(:Banana)]
+</code></pre>
+
+<p>Finally, all timestamps in a given interval can be selected with <code>..</code>:</p>
+<pre><code class="julia">a[Date(2000,1,3) .. Date(2000,1,7), :, :]
+a[Date(2000,1,3) .. Date(2000,1,7), [:Red, :Blue], :Banana]
+</code></pre>
               
             </div>
           </div>

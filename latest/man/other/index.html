@@ -104,8 +104,6 @@
                 
                     <li><a class="toctree-l4" href="#absolute-and-percent-differencing">Absolute and percent differencing</a></li>
                 
-                    <li><a class="toctree-l4" href="#dropping-timestamps">Dropping timestamps</a></li>
-                
             
             </ul>
         
@@ -173,12 +171,33 @@
 <h1 id="other-time-series-utilities">Other time series utilities</h1>
 <p><a id='Rolling-reductions-1'></a></p>
 <h2 id="rolling-reductions">Rolling reductions</h2>
+<p><code>moving</code> applies a reduction function to a moving window of values and assigns the output value to the final timestamp in the window. For example, to take a 10-element moving average:</p>
+<pre><code class="julia">using TimeAxisArrays
+
+a = TimeAxisArray(cumsum(ones(15)), Date(2000,1,1):Date(2000,1,15))
+moving(a, mean, 10)
+</code></pre>
+
 <p><a id='Lead-and-lag-1'></a></p>
 <h2 id="lead-and-lag">Lead and lag</h2>
+<p><code>lead</code> and <code>lag</code> shift all values forwards or backwards one timestamp:</p>
+<pre><code class="julia">lead(a)
+</code></pre>
+
 <p><a id='Absolute-and-percent-differencing-1'></a></p>
 <h2 id="absolute-and-percent-differencing">Absolute and percent differencing</h2>
-<p><a id='Dropping-timestamps-1'></a></p>
-<h2 id="dropping-timestamps">Dropping timestamps</h2>
+<p><code>diff</code> subtracts the value at each timestamp from the value preceding it. By default differencing is only applied once, but optional higher order differencing is possible as well:</p>
+<pre><code class="julia">diff(a) # Difference of values
+diff(a,2) # Difference of difference of values
+</code></pre>
+
+<p><code>percentchange</code> performs a similar function, returning the percent difference between values at each timestamp and those immediately preceding them:</p>
+<pre><code class="julia">percentchange(a)
+</code></pre>
+
+<p>Setting the <code>logdiff</code> keyword to true provides the percent change as the difference of logged values:</p>
+<pre><code class="julia">percentchange(a, logdiff=true)
+</code></pre>
               
             </div>
           </div>
