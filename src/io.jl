@@ -87,19 +87,19 @@ function textrep{T,N}(io::IO, A::TimeAxisArray{T,N}, typealiasname::AbstractStri
     return A.axes[1].val
 end #textrep 3D+
 
-function Base.writemime(io::IO, m::MIME"text/plain", A::TimeAxisArray)
+function Base.show(io::IO, A::TimeAxisArray)
     timestamps = textrep(io, A, "TimeAxisArray")
     tsstart, tsend = timestamps[1], timestamps[end]
     print(io, "Spans $tsstart to $tsend")
     return nothing
-end #writemime
+end #show
 
-function Base.writemime(io::IO, m::MIME"text/plain", A::RegularTimeAxisArray)
+function Base.show(io::IO, A::RegularTimeAxisArray)
     timestamps = textrep(io, A, "RegularTimeAxisArray")
     tsstart, tsend, tsinterval = timestamps[1], timestamps[end], step(timestamps)
     print(io, "Spans $tsstart to $tsend at intervals of $tsinterval")
     return nothing
-end #writemime
+end #show
 
 # Read from disk
 

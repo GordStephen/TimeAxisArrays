@@ -10,7 +10,7 @@ lead, lag, percentchange,
 dropif, dropnan,
 readtimeaxisarray, date, datetime
 
-symbolize(x) = x |> string |> symbol
+symbolize(x) = x |> string |> Symbol
 defaultaxisnames = map(symbolize, ["Timestamp"; "Column"; map(i -> "Axis$i", 3:10)])
 defaultaxisvalues = map(symbolize, 'A':'Z')
 
@@ -39,26 +39,26 @@ makecategoricalaxes(axesvals) = #TODO: Precise typing
 
 ## 1-D TimeAxisArray
 
-call(::Type{TimeAxisArray}, data::AbstractArray, timestamps::AbstractTimeVector) =
+(::Type{TimeAxisArray})(data::AbstractArray, timestamps::AbstractTimeVector) =
     AxisArray(data, maketimeaxis(timestamps))
 
-call(::Type{RegularTimeAxisArray}, data::AbstractArray, timestamps::Range) =
+(::Type{RegularTimeAxisArray})(data::AbstractArray, timestamps::Range) =
     TimeAxisArray(data, timestamps)
 
 ## Custom higher-axis values with automatic names
 
-call(::Type{TimeAxisArray}, data::AbstractArray, timestamps::AbstractTimeVector, axesvals::CategoryVector...) =
+(::Type{TimeAxisArray})(data::AbstractArray, timestamps::AbstractTimeVector, axesvals::CategoryVector...) =
     AxisArray(data, maketimeaxis(timestamps), makecategoricalaxes(axesvals)...)
 
-call(::Type{RegularTimeAxisArray}, data::AbstractArray, timestamps::Range, axesvals::CategoryVector...) =
+(::Type{RegularTimeAxisArray})(data::AbstractArray, timestamps::Range, axesvals::CategoryVector...) =
     TimeAxisArray(data, timestamps, axesvals...)
 
 ## Custom higher-axis values with custom higher-axis names
 
-call(::Type{TimeAxisArray}, data::AbstractArray, timestamps::AbstractTimeVector, axes::CategoricalAxis...) =
+(::Type{TimeAxisArray})(data::AbstractArray, timestamps::AbstractTimeVector, axes::CategoricalAxis...) =
     AxisArray(data, maketimeaxis(timestamps), axes...)
 
-call(::Type{RegularTimeAxisArray}, data::AbstractArray, timestamps::Range, axes::CategoricalAxis...) =
+(::Type{RegularTimeAxisArray})(data::AbstractArray, timestamps::Range, axes::CategoricalAxis...) =
     TimeAxisArray(data, timestamps, axes...)
 
 include("operations.jl")
