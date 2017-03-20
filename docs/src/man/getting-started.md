@@ -9,7 +9,7 @@ using TimeAxisArrays
 
 tstamps = 1:10
 data = randn(10)
-TimeAxisArray(data, timestamps)
+TimeAxisArray(data, tstamps)
 ```
 
 Timestamps can be any sortable type. For example, `Date`s or `DateTime`s are often useful as timestamps:
