@@ -24,8 +24,8 @@ typealias CategoricalAxis{T} Axis{T, CategoryVector}
 typealias TimeAxis{T<:AbstractTimeVector} Axis{defaultaxisnames[1], T}
 typealias RegularTimeAxis{T<:Range} Axis{defaultaxisnames[1], T}
 
-typealias TimeAxisArray{T,N,D,Ax} AxisArray{T,N,D,Ax}
-typealias RegularTimeAxisArray{T,N,D,Ax} AxisArray{T,N,D,Ax}
+typealias TimeAxisArray{T,N,D,Ax<:Tuple{TimeAxis,Vararg{Axis}}} AxisArray{T,N,D,Ax}
+typealias RegularTimeAxisArray{T,N,D,Ax<:Tuple{RegularTimeAxis,Vararg{Axis}}} AxisArray{T,N,D,Ax}
 
 # Helper functions
 
