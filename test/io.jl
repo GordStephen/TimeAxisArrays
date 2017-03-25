@@ -1,6 +1,6 @@
 # Write to text / REPL
-testwritemime(A::TimeAxisArray) = writemime(IOBuffer(),MIME("text/plain"),A)
-map(testwritemime, TimeAxisArray[A1d1, A1d2, A2d1, A3d, A4d])
+testshow(A::TimeAxisArray) = show(IOBuffer(),MIME("text/plain"),A)
+map(testshow, TimeAxisArray[A1d1, A1d2, A2d1, A3d, A4d])
 
 # Read to / write from file
 

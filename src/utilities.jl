@@ -18,4 +18,4 @@ stringfallback(x, fallback) = x
 stringfallback(x::AbstractString, fallback) = fallback
 
 date(format::AbstractString="yyyy-mm-dd"; locale="english") = x -> Date(x, format, locale=locale)
-datetime(format::AbstractString="yyyy-mm-ddTHH:MM:SS"; locale="english") = x -> DateTime(x, format, locale=locale)
+datetime(format::AbstractString="yyyy-mm-ddTHH:MM:SS.sss"; locale="english") = x -> DateTime(x, format, locale=locale)
