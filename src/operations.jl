@@ -130,7 +130,7 @@ Computes the percent change between observations in time in `A`. If `logdiff` is
 """
 function percentchange(A::TimeAxisArray; logdiff::Bool=false)
     n = size(A,1)
-    return logdiff ? diff(map(log,A)) : TimeAxisArray(A[Axis{:Timestamp}(2:n)] ./  A[Axis{:Timestamp}(1:n-1)] .- 1, timestamps(A)[2:end], A.axes[2:end]...)
+    return logdiff ? diff(map(log, A)) : TimeAxisArray(A[Axis{:Timestamp}(2:n)] ./  A[Axis{:Timestamp}(1:n-1)] .- 1, timestamps(A)[2:end], A.axes[2:end]...)
 end #percentchange
 
 """
