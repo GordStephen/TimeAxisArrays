@@ -12,7 +12,7 @@ before_install:
   - openssl aes-256-cbc -K $encrypted_0de47d7b2d4a_key -iv $encrypted_0de47d7b2d4a_iv -in docs/.documenter.enc -out docs/.documenter -d
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-  - julia -e 'Pkg.clone("https://github.com/mbauman/Tuples.jl");   Pkg.clone("https://github.com/mbauman/RangeArrays.jl"); Pkg.clone("https://github.com/mbauman/AxisArrays.jl"); Pkg.clone(pwd()); Pkg.build("TimeAxisArrays"); Pkg.test("TimeAxisArrays"; coverage=true)'
+  - julia -e Pkg.clone(pwd()); Pkg.build("TimeAxisArrays"); Pkg.test("TimeAxisArrays"; coverage=true)'
 after_success:
   - julia -e 'Pkg.add("Documenter")'
   - julia -e 'cd(Pkg.dir("TimeAxisArrays")); include(joinpath("docs", "make.jl"))'
